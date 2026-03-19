@@ -1,0 +1,935 @@
+              * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        #cyron__container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999999;
+        }
+
+        #cyron__container > * {
+            pointer-events: auto;
+        }
+        
+        #cyron__pet {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000000;
+            background: linear-gradient(135deg, #FFE5EC 0%, #FFC2D4 100%);
+            box-shadow: 
+                0 8px 32px rgba(255, 105, 180, 0.25),
+                0 0 0 0 rgba(255, 182, 193, 0.7);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            animation: cyron__float 4s ease-in-out infinite,
+                       cyron__pulse 2s ease-in-out infinite;
+        }
+
+        #cyron__pet::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent 30%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                transparent 70%);
+            animation: cyron__shine 3s ease-in-out infinite;
+        }
+
+        #cyron__pet:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 
+                0 12px 40px rgba(255, 105, 180, 0.35),
+                0 0 30px rgba(255, 182, 193, 0.5);
+        }
+
+        #cyron__pet:active {
+            transform: scale(0.92);
+        }
+
+        #cyron__pet.cyron__dragging {
+            cursor: grabbing;
+            animation: none;
+            box-shadow: 
+                0 15px 50px rgba(255, 105, 180, 0.4),
+                0 0 40px rgba(255, 182, 193, 0.6);
+            transform: scale(1.1);
+        }
+
+        #cyron__pet img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes cyron__float {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg); 
+            }
+            25% { 
+                transform: translateY(-10px) rotate(-3deg); 
+            }
+            50% { 
+                transform: translateY(-15px) rotate(0deg); 
+            }
+            75% { 
+                transform: translateY(-10px) rotate(3deg); 
+            }
+        }
+
+        @keyframes cyron__pulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 8px 32px rgba(255, 105, 180, 0.25),
+                    0 0 0 0 rgba(255, 182, 193, 0.7);
+            }
+            50% { 
+                box-shadow: 
+                    0 8px 32px rgba(255, 105, 180, 0.35),
+                    0 0 0 20px rgba(255, 182, 193, 0);
+            }
+        }
+
+        @keyframes cyron__shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        #cyron__bubble {
+            position: fixed;
+            max-width: 300px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFF5F8 100%);
+            color: #4A4A4A;
+            padding: 14px 18px;
+            border-radius: 18px;
+            box-shadow: 
+                0 8px 32px rgba(255, 105, 180, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            z-index: 999999;
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(15px) scale(0.8);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            border: 1px solid rgba(255, 182, 193, 0.3);
+        }
+
+        #cyron__bubble::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 10px 10px 0 10px;
+            border-color: #FFF5F8 transparent transparent transparent;
+            filter: drop-shadow(0 2px 4px rgba(255, 105, 180, 0.15));
+        }
+
+        #cyron__bubble.cyron__show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            animation: cyron__bubbleBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes cyron__bubbleBounce {
+            0% { transform: translateY(15px) scale(0.8); }
+            50% { transform: translateY(-5px) scale(1.05); }
+            100% { transform: translateY(0) scale(1); }
+        }
+        
+        #cyron__chatbot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FFF0F5 0%, #FFE5EC 50%, #FFF5F8 100%);
+            z-index: 1000001;
+            display: none;
+            flex-direction: column;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #cyron__chatbot.cyron__active {
+            display: flex;
+            opacity: 1;
+            transform: scale(1);
+            animation: cyron__chatOpen 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #cyron__chatbot.cyron__closing {
+            animation: cyron__chatClose 0.4s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards;
+        }
+
+        @keyframes cyron__chatOpen {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes cyron__chatClose {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+            }
+        }
+
+        #cyron__chat-header {
+            background: linear-gradient(135deg, #FFB6D9 0%, #FF8EC7 100%);
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(255, 105, 180, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #cyron__chat-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            animation: cyron__headerShine 3s ease-in-out infinite;
+        }
+
+        @keyframes cyron__headerShine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        .cyron__header-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cyron__header-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .cyron__header-info h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2px;
+        }
+
+        .cyron__header-status {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cyron__status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: cyron__statusPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+        }
+
+        @keyframes cyron__statusPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+        }
+
+        #cyron__close-btn {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: white;
+            font-size: 26px;
+            cursor: pointer;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        #cyron__close-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        #cyron__close-btn:active {
+            transform: rotate(90deg) scale(0.95);
+        }
+
+        #cyron__messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scroll-behavior: smooth;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 182, 193, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 192, 203, 0.1) 0%, transparent 50%);
+        }
+
+        #cyron__messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #cyron__messages::-webkit-scrollbar-track {
+            background: rgba(255, 182, 193, 0.1);
+            border-radius: 4px;
+        }
+
+        #cyron__messages::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #FFB6D9 0%, #FF8EC7 100%);
+            border-radius: 4px;
+        }
+
+        #cyron__messages::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #FF8EC7 0%, #FF6FB5 100%);
+        }
+
+        .cyron__message {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            animation: cyron__messageSlide 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 100%;
+        }
+
+        @keyframes cyron__messageSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .cyron__message.cyron__user {
+            flex-direction: row-reverse;
+        }
+
+        .cyron__message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .cyron__message-bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 15px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            animation: cyron__bubblePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes cyron__bubblePop {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .cyron__message.cyron__bot .cyron__message-bubble {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFF5F8 100%);
+            color: #4A4A4A;
+            border-bottom-left-radius: 6px;
+            border: 1px solid rgba(255, 182, 193, 0.2);
+        }
+
+        .cyron__message.cyron__user .cyron__message-bubble {
+            background: linear-gradient(135deg, #FFB6D9 0%, #FF9FCF 100%);
+            color: #FFFFFF;
+            border-bottom-right-radius: 6px;
+        }
+
+        .cyron__message-time {
+            font-size: 11px;
+            color: rgba(0, 0, 0, 0.4);
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .cyron__message.cyron__user .cyron__message-time {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .cyron__typing {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFF5F8 100%);
+            border-radius: 20px;
+            max-width: 80px;
+            border: 1px solid rgba(255, 182, 193, 0.2);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .cyron__typing.cyron__active {
+            display: flex;
+        }
+
+        .cyron__typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #FFB6D9;
+            border-radius: 50%;
+            animation: cyron__typingAnimation 1.4s ease-in-out infinite;
+        }
+
+        .cyron__typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .cyron__typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes cyron__typingAnimation {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        .cyron__warning {
+            animation: cyron__warningShake 0.5s ease;
+            background: linear-gradient(135deg, #FFE5E5 0%, #FFCCCC 100%) !important;
+            border-left: 4px solid #FF6B6B !important;
+        }
+
+        @keyframes cyron__warningShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+            20%, 40%, 60%, 80% { transform: translateX(8px); }
+        }
+
+        #cyron__input-area {
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFF8FB 100%);
+            box-shadow: 0 -4px 20px rgba(255, 105, 180, 0.15);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            border-top: 1px solid rgba(255, 182, 193, 0.2);
+        }
+
+        #cyron__input {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid rgba(255, 182, 193, 0.3);
+            border-radius: 25px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: #FFFFFF;
+            color: #4A4A4A;
+            font-family: inherit;
+        }
+
+        #cyron__input::placeholder {
+            color: #B8B8B8;
+        }
+
+        #cyron__input:focus {
+            border-color: #FFB6D9;
+            background: #FFF5F8;
+            box-shadow: 0 0 0 4px rgba(255, 182, 193, 0.15);
+            transform: translateY(-2px);
+        }
+
+        #cyron__send-btn {
+            background: linear-gradient(135deg, #FFB6D9 0%, #FF8EC7 100%);
+            border: none;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: inherit;
+            box-shadow: 0 4px 16px rgba(255, 105, 180, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #cyron__send-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        #cyron__send-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        #cyron__send-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(255, 105, 180, 0.4);
+        }
+
+        #cyron__send-btn:active {
+            transform: translateY(0);
+        }
+
+        #cyron__send-btn span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        #cyron__welcome {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                #FFF0F5 0%, 
+                #FFE5EC 25%, 
+                #FFD6E8 50%, 
+                #FFE5EC 75%, 
+                #FFF0F5 100%);
+            background-size: 400% 400%;
+            animation: cyron__welcomeGradient 15s ease infinite;
+            z-index: 1000002;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        @keyframes cyron__welcomeGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        #cyron__welcome.cyron__active {
+            display: flex;
+            opacity: 1;
+            animation: cyron__welcomeFadeIn 0.6s ease;
+        }
+
+        @keyframes cyron__welcomeFadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        #cyron__welcome-gif {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            margin-bottom: 32px;
+            box-shadow: 
+                0 12px 40px rgba(255, 105, 180, 0.3),
+                0 0 0 0 rgba(255, 182, 193, 0.7);
+            animation: cyron__welcomeAvatarPulse 2s ease-in-out infinite;
+            border: 4px solid rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes cyron__welcomeAvatarPulse {
+            0%, 100% {
+                box-shadow: 
+                    0 12px 40px rgba(255, 105, 180, 0.3),
+                    0 0 0 0 rgba(255, 182, 193, 0.7);
+            }
+            50% {
+                box-shadow: 
+                    0 12px 40px rgba(255, 105, 180, 0.4),
+                    0 0 0 25px rgba(255, 182, 193, 0);
+            }
+        }
+
+        #cyron__welcome-message {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFF8FB 100%);
+            padding: 36px;
+            border-radius: 24px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 
+                0 8px 32px rgba(255, 105, 180, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 182, 193, 0.2);
+            animation: cyron__messageFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes cyron__messageFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        #cyron__welcome-text {
+            font-size: 17px;
+            color: #4A4A4A;
+            line-height: 1.7;
+            margin-bottom: 28px;
+            min-height: 60px;
+            text-align: center;
+        }
+
+        #cyron__welcome-form {
+            display: none;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .cyron__form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cyron__form-group label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cyron__form-group input,
+        .cyron__form-group textarea {
+            padding: 14px 18px;
+            border: 2px solid rgba(255, 182, 193, 0.3);
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: inherit;
+            background: #FFFFFF;
+            color: #4A4A4A;
+        }
+
+        .cyron__form-group input:focus,
+        .cyron__form-group textarea:focus {
+            border-color: #FFB6D9;
+            background: #FFF5F8;
+            box-shadow: 0 0 0 4px rgba(255, 182, 193, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .cyron__form-group textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .cyron__love-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #FFE5EC 0%, #FFB6D9 100%);
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .cyron__love-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFB6D9 0%, #FF8EC7 100%);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
+            border: 3px solid #FFFFFF;
+        }
+
+        .cyron__love-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            box-shadow: 0 6px 16px rgba(255, 105, 180, 0.5);
+        }
+
+        .cyron__love-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFB6D9 0%, #FF8EC7 100%);
+            cursor: pointer;
+            border: 3px solid #FFFFFF;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
+        }
+
+        .cyron__love-value {
+            text-align: center;
+            font-size: 32px;
+            background: linear-gradient(135deg, #FFB6D9 0%, #FF8EC7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 12px;
+            font-weight: 700;
+            animation: cyron__loveValuePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes cyron__loveValuePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        #cyron__welcome-btn {
+            background: linear-gradient(135deg, #FFB6D9 0%, #FF8EC7 100%);
+            border: none;
+            color: white;
+            padding: 16px 36px;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: none;
+            margin-top: 12px;
+            font-family: inherit;
+            box-shadow: 0 8px 24px rgba(255, 105, 180, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #cyron__welcome-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        #cyron__welcome-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        #cyron__welcome-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(255, 105, 180, 0.45);
+        }
+
+        #cyron__welcome-btn:active {
+            transform: translateY(0);
+        }
+
+        #cyron__welcome-btn:disabled {
+            background: #D0D0D0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #cyron__welcome-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cyron__warning-text {
+            font-size: 12px;
+            color: #FF6B6B;
+            text-align: center;
+            margin-top: 14px;
+        }
+
+        .cyron__hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000003;
+            overflow: hidden;
+        }
+
+        .cyron__heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            animation: cyron__heartFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes cyron__heartFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            #cyron__pet {
+                width: 65px;
+                height: 65px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            #cyron__bubble {
+                max-width: 260px;
+                font-size: 13px;
+                padding: 12px 16px;
+            }
+
+            #cyron__chat-header {
+                padding: 16px 20px;
+            }
+
+            .cyron__header-avatar {
+                width: 40px;
+                height: 40px;
+            }
+
+            .cyron__header-info h2 {
+                font-size: 18px;
+            }
+
+            #cyron__messages {
+                padding: 20px 16px;
+            }
+
+            .cyron__message-bubble {
+                max-width: 80%;
+                font-size: 14px;
+                padding: 10px 14px;
+            }
+
+            #cyron__input-area {
+                padding: 12px 16px;
+            }
+
+            #cyron__input {
+                font-size: 14px;
+                padding: 12px 16px;
+            }
+
+            #cyron__send-btn {
+                font-size: 14px;
+                padding: 12px 22px;
+            }
+
+            #cyron__welcome-message {
+                padding: 28px;
+            }
+
+            #cyron__welcome-gif {
+                width: 110px;
+                height: 110px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #cyron__welcome-message {
+                padding: 24px;
+                margin: 0 16px;
+            }
+
+            .cyron__message-bubble {
+                max-width: 85%;
+            }
+
+            .cyron__love-value {
+                font-size: 28px;
+            }
+        }
