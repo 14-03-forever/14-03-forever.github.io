@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Historia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/resources/css/style.css">
+    <link rel="stylesheet" href="/resources/css/cyron.css">
+</head>
+<body>
+    <div id="hearts-container"></div>
+
+    <div id="snow-container"></div>
+
+    <div class="container">
+        <header>
+            <h1>Nuestra Historia</h1>
+            <p class="subtitle">Desde el 14 de marzo de 2026</p>
+        </header>
+<hr>
+        <section class="counter-section" id="counter-section">
+            <h2 class="counter-title">Tiempo Juntos</h2>
+            <div class="counter-grid">
+                <div class="counter-item">
+                    <span class="counter-value" id="years">0</span>
+                    <span class="counter-label">Años</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-value" id="months">0</span>
+                    <span class="counter-label">Meses</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-value" id="days">0</span>
+                    <span class="counter-label">Días</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-value" id="hours">0</span>
+                    <span class="counter-label">Horas</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-value" id="minutes">0</span>
+                    <span class="counter-label">Minutos</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-value" id="seconds">0</span>
+                    <span class="counter-label">Segundos</span>
+                </div>
+            </div>
+        </section>
+                <section class="message-section" id="message-section">
+            <p class="message-text" id="dynamic-message"></p>
+        </section>
+<div class="item">
+<h1>Cartita Diaria</h1>
+<br>
+     <p class="subtitle">Escríbeme algo lindo cada día. Solo yo, tu novio, lo leeré con el corazón.</p>
+     <div class="love-letter-container">
+        <div class="love-envelope">
+            <div class="love-envelope-front">
+                <div class="love-heart-decoration">
+                    <div class="love-heart" style="top: 30px; left: 40px;"></div>
+                    <div class="love-heart" style="top: 60px; right: 50px;"></div>
+                    <div class="love-heart" style="bottom: 40px; left: 70px;"></div>
+                    <div class="love-heart" style="bottom: 50px; right: 60px;"></div>
+                </div>
+                <div class="love-envelope-message">
+                    <p>Toca para abrir</p>
+                </div>
+            </div>
+            <div class="love-envelope-flap"></div>
+            <div class="love-letter-content">
+                <h2 class="love-letter-header">Tu cartita</h2>
+                <textarea class="love-letter-message" placeholder="Escribe aquí tu mensaje..."></textarea>
+                <div class="love-letter-footer">
+                    <button class="love-send-btn">Enviar con amor</button>
+                </div>
+            </div>
+        </div>
+        <div class="love-lock-message">
+            <p>Ya has enviado tu carta de amor hoy. Podrás escribir una nueva mañana. ❤️</p>
+        </div>
+        <div class="love-success-animation"></div>
+        <div class="love-hidden-config" id="loveAppSettings">
+            <div class="love-app-internal-config" id="loveMsgServiceConfig"></div>
+        </div>
+        </div>
+        </div>
+        <hr>
+           <footer>
+            <p>Un amor eterno que crece con cada segundo ❤</p>
+        </footer>
+              <div class="cyron__hearts" id="cyron__hearts"></div>
+
+    <div id="cyron__container">
+        <div id="cyron__pet">
+            <img src="https://orvex-web.github.io/resources/multimedia/image/cyron-orvex.gif" alt="Cyron" id="cyron__pet-img">
+        </div>
+        
+        <div id="cyron__bubble"></div>
+
+        <div id="cyron__chatbot">
+            <div id="cyron__chat-header">
+                <div class="cyron__header-content">
+                    <img src="https://orvex-web.github.io/resources/multimedia/image/cyron-orvex.gif" alt="Cyron" class="cyron__header-avatar">
+                    <div class="cyron__header-info">
+                        <h2>Cyron</h2>
+                        <div class="cyron__header-status">
+                            <span class="cyron__status-dot"></span>
+                            <span>En línea</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="cyron__close-btn">×</button>
+            </div>
+            <div id="cyron__messages">
+                <div class="cyron__typing">
+                    <div class="cyron__typing-dot"></div>
+                    <div class="cyron__typing-dot"></div>
+                    <div class="cyron__typing-dot"></div>
+                </div>
+            </div>
+            <div id="cyron__input-area">
+                <input type="text" id="cyron__input" placeholder="Escribe un mensaje..." disabled autocomplete="off">
+                <button id="cyron__send-btn"><span>Enviar</span></button>
+            </div>
+        </div>
+
+        <div id="cyron__welcome">
+            <img src="https://orvex-web.github.io/resources/multimedia/image/cyron-orvex.gif" alt="Cyron" id="cyron__welcome-gif">
+            <div id="cyron__welcome-message">
+                <div id="cyron__welcome-text"></div>
+                <form id="cyron__welcome-form">
+                    <div class="cyron__form-group">
+                        <label for="cyron__user-name">💝 ¿Cómo te llamas?</label>
+                        <input type="text" id="cyron__user-name" required placeholder="Tu nombre...">
+                    </div>
+                    <div class="cyron__form-group">
+                        <label for="cyron__boyfriend-name">👩🏻‍❤️‍👨🏻 ¿Cómo se llama tu novio?</label>
+                        <input type="text" id="cyron__boyfriend-name" required placeholder="El nombre de tu novio...">
+                    </div>
+                    <div class="cyron__form-group">
+                        <label>💖 ¿Cuánto lo amas?</label>
+                        <input type="range" min="0" max="100" value="0" class="cyron__love-slider" id="cyron__love-level">
+                        <div class="cyron__love-value">💗 <span id="cyron__love-display">0</span>%</div>
+                    </div>
+                    <div class="cyron__form-group">
+                        <label for="cyron__relationship-desc">💌 Algo especial sobre su relación</label>
+                        <textarea id="cyron__relationship-desc" placeholder="Cuéntame algo hermoso... (opcional)"></textarea>
+                    </div>
+                    <p class="cyron__warning-text">⚠️ Esta información no se podrá modificar después</p>
+                </form>
+                <button id="cyron__welcome-btn"><span>Continuar 💕</span></button>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="/resources/js/script.js"></script>
+    <script src="/resources/js/script-letter.js"></script>
+    <script src="/resources/js/cyron.js"></script>
+    <script src="/resources/js/utils.js"></script>
+</body>
+</html>
