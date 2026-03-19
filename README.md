@@ -18,7 +18,9 @@ Este repositorio tiene como **único propósito**:
 - Presentación pública del proyecto
 - Exhibición del diseño y funcionamiento general
 
-🚫 **Este proyecto NO es de código abierto** 🚫 **Este repositorio NO concede licencia de uso**
+🚫 **Este proyecto NO es de código abierto** 
+
+🚫 **Este repositorio NO concede licencia de uso**
 
 La visualización del código fuente **no autoriza** su copia, modificación, reutilización ni distribución bajo ninguna circunstancia.
 
